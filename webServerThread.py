@@ -1,52 +1,12 @@
 #Skeleton Python Code for the Web Server
 
 import os
-import thread
+import _thread
 #import socket module
 #import os,thread
 from socket import *
 import sys          # In order to terminate the program
 
-#************ CONSTANT VARIABLES **************
-BACKLOG = 10 				# How many pending connections queue will hold
-MAX_DATA_RECV = 999999		# Max number of bytes we receive at once
-
-# Create a TCP  server socket
-# (AF_INET is used for IPv4 protocols)
-# (SOCK_STREAM is used for TCP)
-
-serverSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-# Assign a port number
-serverPort = 6789
-
-#print ('hostname is: ', gethostname())
-
-#Prepare a sever socket. Bind the socket to server address and server port 
-serverSocket.bind(('',serverPort))
-
-# Listen to at most 1  connection at a time
-serverSocket.listen(BACKLOG)
-
-#Establish the connection
-print('Ready to serve...')
-
-# Server should be up and running and listening to the incoming connections
-while True:
-	# Set up the connection from the client
-	conn, client_addr = serverSocket.accept()
-	# create a thread to handle request
-	thread.start_new_thread(proxy_thread(conn, addr))
-	
-serverSocket.close()
-
-#******************* END MAIN PROGRAM ******************
-
-#*******************************************************
-#*************** PROXY_THREAD FUNC *********************
-# A thread to handle request from browser **************
-#*******************************************************
-	
 def proxy_thread(conn, client_addr):
 	
 	try:
@@ -68,6 +28,48 @@ def proxy_thread(conn, client_addr):
 		conn.send("<html><head>File not found</head><body><h1>File not Found</h1></body></html>".encode())
 		# Close client socket
 		conn.close()
+
+#************ CONSTANT VARIABLES **************
+BACKLOG = 10 				# How many pending connections queue will hold
+MAX_DATA_RECV = 999999		# Max number of bytes we receive at once
+
+# Create a TCP  server socket
+# (AF_INET is used for IPv4 protocols)
+# (SOCK_STREAM is used for TCP)
+
+serverSocket = socket(AF_INET, SOCK_STREAM)
+
+# Assign a port number
+serverPort = 6789
+
+#print ('hostname is: ', gethostname())
+
+#Prepare a sever socket. Bind the socket to server address and server port 
+serverSocket.bind(('',serverPort))
+
+# Listen to at most 1  connection at a time
+serverSocket.listen(BACKLOG)
+
+#Establish the connection
+print('Ready to serve...')
+
+# Server should be up and running and listening to the incoming connections
+while True:
+	# Set up the connection from the client
+	conn, client_addr = serverSocket.accept()
+	# create a thread to handle request
+	_thread.start_new_thread(proxy_thread,(conn, client_addr))
+	
+serverSocket.close()
+
+#******************* END MAIN PROGRAM ******************
+
+#*******************************************************
+#*************** PROXY_THREAD FUNC *********************
+# A thread to handle request from browser **************
+#*******************************************************
+	
+
 		
 	# If an exception occurs during the execution of try clause
 	# the rest of the clause is skipped
