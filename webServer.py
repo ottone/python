@@ -15,7 +15,7 @@ serverSocket = socket(AF_INET, SOCK_STREAM)
 serverPort = 6789
 
 print ('hostname is: ', gethostname())
-print ('hostname is: ', socket.gethostname()) # Alternative (better) syntax
+#print ('hostname is: ', socket.gethostname()) # Alternative (better) syntax
 
 #Prepare a sever socket. Bind the socket to server address and server port 
 serverSocket.bind(('',serverPort))
@@ -42,7 +42,7 @@ while True:
 	
 	try:
 			# Receives the request message from the client
-			message = connectionSocket.recv(2048)
+			message = connectionSocket.recv(2048).decode()
 			print ('Message is:' , message)
 			# Extract the path  of the requested object from the message
 			# The path is the second part of HTTP header, identified by [1]
@@ -56,9 +56,10 @@ while True:
 			#Send one HTTP response header line into socket
 			connectionSocket.send("HTTP/1.1 200 OK\r\n\r\n".encode())
 			#Send the content of the requested file to the client
-			for i in range(0, len(outputdata)):
-				connectionSocket.send(outputdata[i].encode())
-			connectionSocket.send("\r\n".encode())
+			#for i in range(0, len(outputdata)):
+				#connectionSocket.send(outputdata[i].encode())
+			connectionSocket.send(outputdata.encode())
+			#connectionSocket.send("\r\n".encode())
 			# Close the client connection socket
 			connectionSocket.close()
 	except IOError:
