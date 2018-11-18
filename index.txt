@@ -1,0 +1,60 @@
+<html>
+<head>
+</head>
+<body>
+<h1> Funziona !!!</h1>
+
+<br>
+<br>
+
+#Skeleton Python Code for the Web Server
+<br>
+#import socket module
+<br>
+from socket import *  
+<br>
+import sys 
+<br>
+# In order to terminate the program
+<br>
+serverSocket = socket(AF_INET, SOCK_STREAM)
+<br>
+serverPort = 6789
+<br>
+print ('hostname is: ', gethostname())
+<br>
+#Prepare a sever socket
+<br>
+serverSocket.bind(('',serverPort))
+<br>
+serverSocket.listen(1)
+<br>
+while True:<br>
+	#Establish the connection<br>
+	print('Ready to serve...')<br>
+	connectionSocket, addr = serverSocket.accept()<br>
+	<br>
+	try:<br>
+			message = connectionSocket.recv(2048)<br>
+			filename = message.split()[1]
+			f = open(filename[1:])
+			outputdata = f.read()
+			#Send one HTTP header line into socket
+			connectionSocket.send("HTTP/1.1 200 OK\r\n\r\n".encode())
+			#Send the content of the requested file to the client
+			for i in range(0, len(outputdata)):
+				connectionSocket.send(outputdata[i].encode())
+			connectionSocket.send("\r\n".encode())
+			connectionSocket.close()
+	except IOError:
+			#Send response message for file not found
+			connectionSocket.send("HTTP/1.1 404 Not Found\r\n\r\n".encode())
+			connectionSocket.send("<html><head></head><body><h1>404 Not Found</h1></body></html>\r\n".encode())
+			#Close client socket
+			connectionSocket.close()
+
+serverSocket.close()
+sys.exit()
+#Terminate the program after sending the corresponding data 
+</body>
+</html>
