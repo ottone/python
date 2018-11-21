@@ -37,14 +37,14 @@ def proxy_thread(conn, client_addr):
 		conn.send("\r\n".encode())
 		# Close the client connection socket
 		conn.close()
-		exit
+		
 	except IOError:
 		# Send responce message for file not found
 		conn.send("HTTP/1.1 404 Not Found\r\n\r\n".encode())
 		conn.send("<html><head>File not found</head><body><h1>File not Found</h1></body></html>".encode())
 		# Close client socket
 		conn.close()
-		exit
+		
 
 
 # Create a TCP  server socket
