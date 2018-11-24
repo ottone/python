@@ -1,8 +1,8 @@
-""" PYHEARTBEAT CLIENT: SENDS AN UDP PACKET TO A GIVEN SERVER EVERY 10 SECONDS
-    ADJUST THE CONSTANT PARAMENTER AS NEEDED, OR CALL AS: PYHBCLIENT.PY SERVERIP  [UDPPORT]
-"""
+#""" PYHEARTBEAT CLIENT: SENDS AN UDP PACKET TO A GIVEN SERVER EVERY 10 SECONDS
+#    ADJUST THE CONSTANT PARAMENTER AS NEEDED, OR CALL AS: PYHBCLIENT.PY SERVERIP  [UDPPORT]
+#"""
 
-from socket import socket
+from socket import *
 from time import time, ctime, sleep
 import sys
 
@@ -20,7 +20,7 @@ print('HBClient sending to IP: ', SERVERIP , 'port :', HBPORT)
 print('\n*** Press Ctrl - C to terminate ***\n')
 
 while 1:
-	hbsocket.sendto('Thump!', (SERVERIP,HBPORT))
+	hbsocket.sendto('Thump!'.encode(), (SERVERIP,HBPORT))
 	if __debug__:
 		print('Time: ' , ctime(time()))
 	sleep(BEATWAIT)
