@@ -12,6 +12,7 @@ BEATWAIT = 10 				# 	NUMBER OF SECONDS BETWEEN HEARTBEATS
 
 if len(sys.argv) > 1:
 	SERVERIP=sys.argv[1]
+
 if len(sys.argv) > 2:
 	HBPORT=sys.argv[2]
 	
