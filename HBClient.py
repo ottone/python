@@ -6,22 +6,22 @@ from socket import *
 from time import time, ctime, sleep
 import sys
 
-SERVERIP = '127.0.0.1'		#	LOCAL HOST, JUST FOR TESTING
-HBPORT = 43728				# 	AN ARBITRARY UDP PORT
+SERVERIP = '192.168.1.24'		#	LOCAL HOST, JUST FOR TESTING
+HBPORT = 43278				# 	AN ARBITRARY UDP PORT
 BEATWAIT = 10 				# 	NUMBER OF SECONDS BETWEEN HEARTBEATS
 
 if len(sys.argv) > 1:
 	SERVERIP=sys.argv[1]
 
 if len(sys.argv) > 2:
-	HBPORT=sys.argv[2]
+	HBPORT=int(sys.argv[2])
 	
 hbsocket = socket(AF_INET, SOCK_DGRAM)
 print('HBClient sending to IP: ', SERVERIP , 'port :', HBPORT)
 print('\n*** Press Ctrl - C to terminate ***\n')
 
 while 1:
-	hbsocket.sendto('Thump!'.encode(), (SERVERIP,HBPORT))
+	hbsocket.sendto('Thump!', (SERVERIP,HBPORT))
 	if __debug__:
 		print('Time: ' , ctime(time()))
 	sleep(BEATWAIT)
