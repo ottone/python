@@ -37,28 +37,39 @@ def checksum(string):
 def receiveOnePing(mySocket, ID, timeout, destAddr):
 	
 	timeLeft = timeout
-
+	
+    #print("timeout : ", timeLeft)
+	
 	while 1:
 		startedSelect = time.time()
 		whatReady = select.select([mySocket], [], [], timeLeft)
 		howLongInSelect = (time.time() - startedSelect)
+		print('whatReady[0] :',whatReady)
 		if whatReady[0] == []: # Timeout
 			return "Request timed out."
-
-	timeReceived = time.time()
-	recPacket, addr = mySocket.recvfrom(1024)
-
-	#Fill in start
-
-	#Fetch the ICMP header from the IP packet
-
-	#Fill in end
-
-	timeLeft = timeLeft - howLongInSelect
-	if timeLeft <= 0:
-		return "Request timed out."
+		timeReceived = time.time()
+		recPacket, addr = mySocket.recvfrom(1024)
 		
+		#Fill in start
+		#Fetch the ICMP header from the IP packet
+		#icmph = recPacket[20:28]
+		#type, code, checksum, pID, sq = struct.unpack("bbHHh", icmph)
+		# header = struct.pack("bbHHh", ICMP_ECHO_REQUEST, 0, myChecksum, ID, 1)
+		#print("ICMP Header: ",type, code, checksum, pID, sq)
+		#if pID == ID:
+		#	bytesinDbl = struct.calcsize("d")
+		#	timeSent = struct.unpack("d", recPacket[28:28 + bytesinDbl])[0]
+		#	rtt=timeReceived - timeSent
+		#
+		#	print ("Round-Trip Time: ")
+		#	return rtt
 		
+		timeLeft = timeLeft - howLongInSelect
+		if timeLeft <= 0:
+			return "Request timed out."
+			
+			
+			
 def sendOnePing(mySocket, destAddr, ID):
 	
 	# Header is type (8), code (8), checksum (16), id (16), sequence (16)
@@ -78,7 +89,6 @@ def sendOnePing(mySocket, destAddr, ID):
 	else:
 		myChecksum = htons(myChecksum)
 
-
 	header = struct.pack("bbHHh", ICMP_ECHO_REQUEST, 0, myChecksum, ID, 1)
 	packet = header + data
 	mySocket.sendto(packet, (destAddr, 1)) # AF_INET address must be tuple, not str
@@ -93,7 +103,6 @@ def doOnePing(destAddr, timeout):
 	# SOCK_RAW is a powerful socket type. For more details: http://sockraw.org/papers/sock_raw
 	
 	mySocket = socket(AF_INET, SOCK_RAW, icmp)
-	
 	myID = os.getpid() & 0xFFFF # Return the current process i
 	sendOnePing(mySocket, destAddr, myID)
 	delay = receiveOnePing(mySocket, myID, timeout, destAddr)
@@ -101,21 +110,26 @@ def doOnePing(destAddr, timeout):
 	return delay
 
 
-def ping(host, timeout=1):
+def main():
+
+	host = input("Inserire il nome dell'Host: ")
+	timeout = 1
 
 	# timeout=1 means: If one second goes by without a reply from the server,
 	# the client assumes that either the client's ping or the server's pong is lost
 
 	dest = gethostbyname(host)
 	print("Pinging " + dest + " using Python:")
-	input("Premere un tasto per proseguire")
 	print("")
 	# Send ping requests to a server separated by approximately one second
 	while 1 :
 		delay = doOnePing(dest, timeout)
 		print(delay)
-		time.sleep(1)# one second
+		time.sleep(1) # one second
 
 	return delay
 	
-	ping("google.com")
+	
+	
+if __name__ == "__main__":
+	main()
