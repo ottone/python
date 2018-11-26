@@ -6,7 +6,11 @@ from socket import *
 from time import time, ctime, sleep
 import sys
 
+<<<<<<< HEAD
 SERVERIP = '127.0.0.1'		#	LOCAL HOST, JUST FOR TESTING
+=======
+SERVERIP = '192.168.1.24'		#	LOCAL HOST, JUST FOR TESTING
+>>>>>>> 56eea3441ef5e372a3f7043a6a728fae0f38abbc
 HBPORT = 43278				# 	AN ARBITRARY UDP PORT
 BEATWAIT = 10 				# 	NUMBER OF SECONDS BETWEEN HEARTBEATS
 
