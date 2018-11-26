@@ -38,31 +38,36 @@ def receiveOnePing(mySocket, ID, timeout, destAddr):
 	
 	timeLeft = timeout
 	
-    #print("timeout : ", timeLeft)
-	
 	while 1:
 		startedSelect = time.time()
 		whatReady = select.select([mySocket], [], [], timeLeft)
 		howLongInSelect = (time.time() - startedSelect)
-		print('whatReady[0] :',whatReady)
+		
 		if whatReady[0] == []: # Timeout
 			return "Request timed out."
 		timeReceived = time.time()
+		
 		recPacket, addr = mySocket.recvfrom(1024)
 		
+		print("recPacket : ", recPacket[20:28])
+
 		#Fill in start
+		
 		#Fetch the ICMP header from the IP packet
-		#icmph = recPacket[20:28]
-		#type, code, checksum, pID, sq = struct.unpack("bbHHh", icmph)
-		# header = struct.pack("bbHHh", ICMP_ECHO_REQUEST, 0, myChecksum, ID, 1)
-		#print("ICMP Header: ",type, code, checksum, pID, sq)
-		#if pID == ID:
-		#	bytesinDbl = struct.calcsize("d")
-		#	timeSent = struct.unpack("d", recPacket[28:28 + bytesinDbl])[0]
-		#	rtt=timeReceived - timeSent
-		#
-		#	print ("Round-Trip Time: ")
-		#	return rtt
+		icmph = recPacket[20:28]
+		
+		type, code, checksum, pID, sq = struct.unpack("bbHHh", icmph)
+		
+		#header = struct.pack("bbHHh", ICMP_ECHO_REQUEST, 0, myChecksum, ID, 1)
+		
+		print("ICMP Header: ",type, code, checksum, pID, sq)
+		if pID == ID:
+			bytesinDbl = struct.calcsize("d")
+			timeSent = struct.unpack("d", recPacket[28:28 + bytesinDbl])[0]
+			rtt=timeReceived - timeSent
+		
+			print ("Round-Trip Time: ")
+			return rtt
 		
 		timeLeft = timeLeft - howLongInSelect
 		if timeLeft <= 0:
@@ -112,18 +117,19 @@ def doOnePing(destAddr, timeout):
 
 def main():
 
-	host = input("Inserire il nome dell'Host: ")
+	# host = input("Inserire il nome dell'Host: ")
 	timeout = 1
 
 	# timeout=1 means: If one second goes by without a reply from the server,
 	# the client assumes that either the client's ping or the server's pong is lost
 
-	dest = gethostbyname(host)
-	print("Pinging " + dest + " using Python:")
+	#dest = gethostbyname(host)
+	#print("Pinging " + dest + " using Python:")
+	print("Pinging 127.0.0.1 using python:")
 	print("")
 	# Send ping requests to a server separated by approximately one second
 	while 1 :
-		delay = doOnePing(dest, timeout)
+		delay = doOnePing('127.0.0.1', timeout)
 		print(delay)
 		time.sleep(1) # one second
 
