@@ -79,7 +79,7 @@ def main(  ):
     "Listen to the heartbeats and detect inactive clients"
     global HBPORT, CHECKWAIT
     if len(sys.argv)>1:
-        HBPORT=sys.argv[1]
+        HBPORT=int(sys.argv[1])
     if len(sys.argv)>2:
         CHECKWAIT=sys.argv[2]
 
